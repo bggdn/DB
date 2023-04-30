@@ -169,12 +169,11 @@ int main()
             //Вариант 65. Отсортировать группу по уменьшению успеваемости
             // любой сессии, с указанием интервала года рождения.
             system("cls");
-            delStudentsMenu->addTitleItem("Введите группу:");
             group = ce->setDataGroup();
             sdb->getRangeSem();
             cout << "Полный список студентов" << endl;
             
-            sdb->updateAvrMarksRangeSem(group);  //Перерасчитать поле средний балл 
+            sdb->updateAvrMarksRangeSem();  //Перерасчитать поле средний балл 
             sdb->printAllSurName_Name_MName_bYaear_avrMarks(group);
             sdb->sortByAvrMarks();
             cout << "\nОтсортированный список студентов" << endl;

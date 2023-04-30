@@ -9,7 +9,7 @@ public:
 		//  0123456789012345678901234567
 		int offset = outString.length(); //28
 		//cout << offset;
-		string lengthName = to_string(name.length());
+		string lengthName = std::to_string(name.length());
 		if (lengthName.length() == 1) {
 			outString[7] = lengthName[0];
 		}
@@ -17,7 +17,7 @@ public:
 			outString[6] = lengthName[0];
 			outString[7] = lengthName[1];
 		}
-		string lengthValue = to_string(value.length());
+		string lengthValue = std::to_string(value.length());
 		if (lengthValue.length() == 1) {
 			outString[22] = lengthValue[0];
 		}
@@ -25,6 +25,34 @@ public:
 			outString[21] = lengthValue[0];
 			outString[22] = lengthValue[1];
 		}
+		outString = outString + name + "=" + value;
+		//cout << outString;
+		return outString;
+	}
+
+	string setParam(string name, int intvalue) {
+		string outString = "name:000; value:int:000 -: ";
+		//  0123456789012345678901234567
+		string value = std::to_string(intvalue);
+		int offset = outString.length(); //28
+		//cout << offset;
+		string lengthName = std::to_string(name.length());
+		if (lengthName.length() == 1) {
+			outString[7] = lengthName[0];
+		}
+		if (lengthName.length() == 2) {
+			outString[6] = lengthName[0];
+			outString[7] = lengthName[1];
+		}
+		string lengthValue = std::to_string(value.length());
+		if (lengthValue.length() == 1) {
+			outString[22] = lengthValue[0];
+		}
+		if (lengthValue.length() == 2) {
+			outString[21] = lengthValue[0];
+			outString[22] = lengthValue[1];
+		}
+
 		outString = outString + name + "=" + value;
 		//cout << outString;
 		return outString;
@@ -114,14 +142,15 @@ public:
 		string outString = "";
 		int numDelimeter = 0;
 		for (int i = 0; i <= inString.length(); i++) {
-			if (inString[i] == delimiter) { 
-				numDelimeter++; }
+			if (inString[i] == delimiter) {
+				numDelimeter++;
+			}
 			if ((numDelimeter == num) && (delimiter != inString[i])) {
-				  outString = outString + inString[i];
+				outString = outString + inString[i];
 			}
 
 		}
-		
+
 		return outString;
 	}
 

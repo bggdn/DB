@@ -25,7 +25,7 @@ public:
 			StudentNode* sn = new StudentNode();
 			for (int i = 0; i < 9; i++)
 				for (int j = 0; j < 10; j++)
-					sn->examsRecordsData[i][j].isEmpty = true;  
+					sn->examsRecordsData[i][j].isEmpty = true;
 			int studentId = 0;
 			while (getline(inFile, line))
 			{
@@ -98,15 +98,15 @@ public:
 							sn->startYear = value;
 						if (strcmp("sex", valueName.c_str()) == 0)
 							if (value == 0)
-								sn->sex = MALE;
+								sn->sex = false;
 							else
-								sn->sex = FEMALE;
+								sn->sex = true;
 					}
 				}
 			}
 			inFile.close();     // закрываем файл
 		}
-		else{
+		else {
 			cout << " \n Файл БД не найден \n";
 			_getch();
 		}
@@ -115,22 +115,24 @@ public:
 	void saveDataToFile(string inFileName) {
 		std::ofstream outFile;          // поток для записи
 		ifstream iff(inFileName); //если файл есть удаляем
-		if (iff.bad() == false) 
+		if (iff.bad() == false)
 		{
 			iff.close();
 			if (remove(inFileName.c_str())) {
 				printf("Error removing file");
 				_getch();
 			}
-			
+
 		}
-        outFile.open(inFileName, std::ios::app); 
-        if (outFile.is_open())
-        {
-            StudentClass st = StudentClass();
+		outFile.open(inFileName, std::ios::app); // окрываем файл для записи
+		// outFile.open(FileName, std::ios::app); // окрываем файл для записи
+		if (outFile.is_open())
+		{
+			StudentClass st = StudentClass();
 			int recordsCount = getRecordCount();
 			StudentNode* sn;
-			for (int i = 0; i < recordsCount;i++) {
+			for (int i = 0; i < recordsCount; i++) {
+				//st.addRusakov();
 				outFile << startRecordString << std::endl;
 				sn = &DataBase.at(i);
 				st.UpdateMasString(sn);
@@ -140,9 +142,9 @@ public:
 				}
 				outFile << endRecordString << std::endl;
 			}
-            
-        }
-        outFile.close();
+
+		}
+		outFile.close();
 	}
 	void setData(StudentNode* tNode, StudentNode* st) {
 		tNode->surName = st->surName;
@@ -155,8 +157,10 @@ public:
 		tNode->sex = st->sex;
 		tNode->startYear = st->startYear;
 		tNode->birthDateString = st->birthDateString;
-		tNode->avrMarks = st->avrMarks; 
-		for(int i=0;i<9;i++)
+		tNode->avrMarks = st->avrMarks; ///!!!!
+		// //по аналогии
+		//ExamsRecords data[9][10];
+		for (int i = 0; i < 9; i++)
 			for (int j = 0; j < 10; j++) {
 				tNode->examsRecordsData[i][j].isEmpty = st->examsRecordsData[i][j].isEmpty;
 				tNode->examsRecordsData[i][j].name = st->examsRecordsData[i][j].name;
@@ -183,28 +187,28 @@ public:
 	}
 	void updateAvrMarks() {
 		StudentClass* stud = new StudentClass();
-		for (int i = 0; i < DataBase.size(); i++) { 
-			DataBase.at(i).avrMarks= stud->getAvrMarks(&DataBase.at(i));
+		for (int i = 0; i < DataBase.size(); i++) {
+			DataBase.at(i).avrMarks = stud->getAvrMarks(&DataBase.at(i));
 		}
 		delete stud;
 	}
-	void updateAvrMarksRangeSem(string group) {
+	void updateAvrMarksRangeSem() {
 		StudentClass* stud = new StudentClass();
 		for (int i = 0; i < DataBase.size(); i++) {
-			if (stud->getGroup() == group)
 			DataBase.at(i).avrMarks = stud->getAvrMarks(&DataBase.at(i), rangeSem);
 		}
 		delete stud;
 	}
-	void printAllSurName_Name_MName_bYaear_avrMarks(string originalGroup) {
+
+	void printAllSurName_Name_MName_bYaear_avrMarks(string group) {
 		StringBuilderClass* sb = new StringBuilderClass();
-		for(auto item:DataBase){
-			if (item.group == originalGroup)
-				cout << item.surName + " " + item.name + " " + item.middleName + " " + sb->split(item.birthDateString, '.', 2) + " " + std::to_string(item.avrMarks) << endl;
-			
+		for (auto item : DataBase) {
+			if (item.group == group)
+			cout << item.surName + " " + item.name + " " + item.middleName + " " + sb->split(item.birthDateString, '.', 2) + " " + item.group + " " + std::to_string(item.avrMarks) << endl;
 		}
 		delete sb;
 	}
+
 
 
 	List <StudentNode>::iterator getMaxAvrMarks() {
@@ -225,9 +229,25 @@ public:
 			sortedLst.push_front(*getMaxAvrMarks());
 			DataBase.erase(getMaxAvrMarks());
 		}
-		for (auto item : sortedLst) 
+		for (auto item : sortedLst)
 			DataBase.push_front(item);
 	}
+
+
+
+	////
+
+	List <StudentNode>::iterator getMaxCountMarks5() {
+		List<StudentNode>::iterator pos = DataBase.begin();
+		List<StudentNode>::iterator mMinPos = pos;
+		while (pos != DataBase.end()) {
+			if ((*pos).countMarks5 > (*mMinPos).countMarks5)
+				mMinPos = pos;
+			++pos;
+		}
+		return mMinPos;
+	}
+
 
 	void getRangeSem() {
 		ClassMenu* semMenu = new ClassMenu();
@@ -237,13 +257,13 @@ public:
 		semMenu->addTitleItem("\nТекущий список семестров:");
 		semMenu->addItem("Выход"); //0
 		semMenu->addItem("Очистить список"); //
-		for(int i=1; i<=9;i++)
+		for (int i = 1; i <= 9; i++)
 			semMenu->addItem("Семестр " + std::to_string(i));
 		while (resultSelectedItem != exitItem) {
 			semMenu->eraseTitle();
 			semMenu->addTitleItem("Выберите семестр для добавления в выборку: ");
 			string tmpString = "";
-			if (rangeSem.size() >0)
+			if (rangeSem.size() > 0)
 				for (auto item : rangeSem) {
 					tmpString = tmpString + " " + std::to_string(item);
 				}

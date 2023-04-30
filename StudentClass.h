@@ -7,11 +7,6 @@
 #include "ClassEdit.h"
 #include "list.hpp"
 using namespace std;
-enum gender
-{
-	MALE,
-	FEMALE
-};
 struct StudentNode
 {
 	string surName;
@@ -22,7 +17,7 @@ struct StudentNode
 	string group;
 	string recordСardNumber;
 	string birthDateString;
-	gender sex;
+	bool sex;// false - девочка      true - мальчик
 	int startYear;
 
 	ExamsRecords examsRecordsData[9][10];  
@@ -62,6 +57,7 @@ public:
 	}
 	void UpdateMasString(StudentNode* sn) {
 		stringList.clear();
+		//stringMas.Erase();
 		StringBuilderClass sb = StringBuilderClass();
 		stringList.insert(stringList.begin(), sb.setParam("surName", sn->surName));
 		stringList.insert(stringList.begin(), sb.setParam("name", sn->name));
@@ -72,25 +68,26 @@ public:
 		stringList.insert(stringList.begin(), sb.setParam("recordСardNumber", sn->recordСardNumber));
 		int intSex = 1;
 		if (sn->sex)
-			intSex = MALE;
+			intSex = 1;
 		else
-			intSex = FEMALE;
-		stringList.insert(stringList.begin(), sb.setParam("sex", to_string(intSex)));
-		stringList.insert(stringList.begin(), sb.setParam("startYear", to_string(sn->startYear)));
+			intSex = 0;
+		stringList.insert(stringList.begin(), sb.setParam("sex", intSex));
+		stringList.insert(stringList.begin(), sb.setParam("startYear", sn->startYear));
 		stringList.insert(stringList.begin(), sb.setParam("birthDateString", sn->birthDateString)); //27.12.1984
 
 		int sem = 0;
 		int num = 0;
-		for (int sem=0;sem<9;sem++)
-			for (int num=0;num<10;num++)
-				if (not sn->examsRecordsData[sem][num].isEmpty ){
+		for (int sem = 0; sem < 9; sem++)
+			for (int num = 0; num < 10; num++)
+				if (not sn->examsRecordsData[sem][num].isEmpty) {
 					//examsResults_sem_num_n - название экзамена или зачета
 					stringList.insert(stringList.begin(), sb.setParam("examsResults_" + std::to_string(sem) + "_" + std::to_string(num) + "_n", sn->examsRecordsData[sem][num].name));
 					//examsResults_sem_num_m - оценка
 					stringList.insert(stringList.begin(), sb.setParam("examsResults_" + std::to_string(sem) + "_" + std::to_string(num) + "_m", std::to_string(sn->examsRecordsData[sem][num].mark)));
 				}
+		//stringMas.dislay();
 	}
-	gender editSex() {
+	bool editSex() {
 		ClassMenu* sexMenu = new ClassMenu();
 		int resultSelectedItem = 1;
 		const int exitItem = 3;
@@ -102,11 +99,11 @@ public:
 			resultSelectedItem = sexMenu->getSelectedItem();
 			switch (resultSelectedItem) {
 			case 0:
-				return FEMALE;
+				return true;
 				resultSelectedItem = exitItem;
 				break;
 			case 1:
-				return MALE;
+				return false;
 				resultSelectedItem = exitItem;
 				break;
 			default:
@@ -138,8 +135,8 @@ public:
 			studDataMenu->addTitleItem("Изменение/добавление данных о студенте:");
 			studDataMenu->addTitleItem("Фамилия: " + sn->surName + " Имя: " + sn->name + " Отчество: " + sn->middleName);
 			string sexString = "";
-			if (sn->sex) { sexString = "мальчик:|"; }
-			else { sexString = "девочка;)"; }
+			if (sn->sex) { sexString = "мальчик"; }
+			else { sexString = "девочка"; }
 			studDataMenu->addTitleItem("пол: " + sexString + " дата рождения: " + sn->birthDateString + " год поступления:" + std::to_string(sn->startYear));
 			studDataMenu->addTitleItem("Номер зачетной книжки: " + sn->recordСardNumber + " Группа: " + sn->group);
 			studDataMenu->addTitleItem("Институт: " + sn->faculty);

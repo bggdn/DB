@@ -66,7 +66,7 @@ public:
 
 	string setDataGroup() {
 
-		label = label + " ¬ведите групппу:";
+		label = " ¬ведите групппу:";
 		draw();
 		data = "";
 		cout << data;
