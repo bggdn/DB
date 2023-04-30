@@ -33,29 +33,6 @@ int main()
     sdb->FileName = "DB.txt";
     sdb->loadDataFromFile();
 
-    bool debug = false;
-    if (debug) {
-        //Сортировка строк
-        List <string> lst = { "Яна" , "Алина Рогова", "Ксюша","Данила", "Алексей" ,"Армен" };
-        //Просмотреть список
-        for (auto item : lst) {
-            cout << item << endl;
-        }
-        List <string> sortedLst;
-        sortedLst.clear();
-        while (!lst.empty()) {
-            sortedLst.push_front(*mMin(&lst));
-            lst.erase(mMin(&lst));
-        }
-        //Просмотреть отсортированный список
-        cout << endl << "------------" << endl;
-        for (auto item : sortedLst) {
-            cout << item<<endl;
-        }
-    }
-    else {
-
-    
     ClassMenu* mainMenu = new ClassMenu();
     mainMenu->addTitleItem("Главное меню");
     mainMenu->addItem("Просмотреть список студетов (удалить или изменить данные)"); //0
@@ -186,7 +163,6 @@ int main()
         default:
             break;
         }
-    }
     }
 }
 
