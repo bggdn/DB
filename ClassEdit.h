@@ -34,20 +34,20 @@ public:
 			drawLineDown(maxLength + 7);
 	}
 
-	string setDataString(string dataString) {
-		
+	string setDataString(string dataString, int mode = 0) { //0 - для всего , 1 - только для букв
+
 		label = label + " Предыдущее значение: " + dataString;
 		draw();
 		data = dataString;
 		cout << data;
-		char ch=0;
-		while (ch!= 13){ //13 - код enter чтобы ввести значения
+		char ch = 0;
+		while (ch != 13) { //13 - код enter чтобы ввести значения
 			ch = _getch();
 			if (ch == 8) {  // Backspace удалить символ
 				string tmpString = "";
 				tmpString = data;
 				data = "";
-				if (tmpString.length()>0){
+				if (tmpString.length() > 0) {
 					for (int i = 0; i < tmpString.length() - 1; i++)
 						data = data + tmpString[i];
 					draw();
@@ -55,9 +55,17 @@ public:
 				}
 				continue;
 			}
-			if (isDigit(ch) or isAlpha(ch) or isSpace(ch) or isSpec(ch)) {
-				cout << ch;
-				data = data + ch;
+			if (!mode) {
+				if (isDigit(ch) or isAlpha(ch)) {
+					cout << ch;
+					data = data + ch;
+				}
+			}
+			else {
+				if (isAlpha(ch)) {
+					cout << ch;
+					data = data + ch;
+				}
 			}
 		}
 		//data = inString;

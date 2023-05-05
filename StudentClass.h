@@ -154,19 +154,19 @@ public:
 				break;
 			case 1:
 				ce->setLabel("¬ведите фамилию. ");
-				sn->surName = ce->setDataString(sn->surName);
+				sn->surName = ce->setDataString(sn->surName, 1);
 				break;
 			case 2:
 				ce->setLabel("¬ведите им€. ");
-				sn->name = ce->setDataString(sn->name);
+				sn->name = ce->setDataString(sn->name, 1);
 				break;
 			case 3:
 				ce->setLabel("¬ведите отчество. ");
-				sn->middleName = ce->setDataString(sn->middleName);
+				sn->middleName = ce->setDataString(sn->middleName, 1);
 				break;
 			case 4:
 				ce->setLabel("¬ведите название института. ");
-				sn->faculty = ce->setDataString(sn->faculty);
+				sn->faculty = ce->setDataString(sn->faculty,1 );
 				break;
 			case 5:
 				ce->setLabel("¬ведите название кафедры. ");
@@ -420,7 +420,7 @@ public:
 					sum = sum + sn->examsRecordsData[i][j].mark;
 					count++;
 				}
-		int avr = 0;
+		double avr = 0;
 		if (count > 0)
 			avr=sum / count;
 		return avr;
@@ -435,7 +435,7 @@ public:
 					sum = sum + sn->examsRecordsData[i-1][j].mark;
 					count++;
 				}
-		int avr = 0;
+		double avr = 0;
 		if (count > 0)
 			avr = sum / count;
 		return avr;
