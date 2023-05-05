@@ -15,10 +15,29 @@ public:
 	~StudentDBClass() {
 		DataBase.clear();
 	}
+
+	void cypher()
+	{
+		srand(time(NULL));
+		char* pass = new char[64];
+		for (int i = 0; i < 64; ++i) {
+			switch (rand() % 3) {
+			case 0:
+				pass[i] = rand() % 10 + '0';
+				break;
+			case 1:
+				pass[i] = rand() % 26 + 'A';
+				break;
+			case 2:
+				pass[i] = rand() % 26 + 'a';
+			}
+		}
+	}
+
 	void loadDataFromFile() {
 		string line;
 		int count = 0;
-		std::ifstream inFile(FileName); // окрываем файл для чтения
+		std::ifstream inFile(FileName, ios_base::binary); // окрываем файл для чтения
 		if (inFile.is_open())
 		{
 			bool isRecord = false;
@@ -37,10 +56,6 @@ public:
 					isRecord = false;
 					studentId++;
 					DataBase.push_front(*sn);
-					//Add(sn);  
-					//
-					//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					/// add
 					for (int i = 0; i < 9; i++)
 						for (int j = 0; j < 10; j++)
 							sn->examsRecordsData[i][j].isEmpty = true;
@@ -52,7 +67,6 @@ public:
 					if (strcmp(getType(line).c_str(), "str") == 0)
 					{
 						string value = getValueStr(line);
-						//cout << value << endl;
 						if (strcmp("surName", valueName.c_str()) == 0)
 							sn->surName = value;
 						if (strcmp("name", valueName.c_str()) == 0)
@@ -72,8 +86,6 @@ public:
 						// ExamsRecords
 						for (int i = 0; i < 9; i++)
 							for (int j = 0; j < 10; j++) {
-								//examsResults_0_2_n
-											// i j
 								string testNameString = "";
 								testNameString = testNameString + "examsResults_" + std::to_string(i) + "_" + std::to_string(j) + "_n";
 								string testMarkString = "";
@@ -114,7 +126,7 @@ public:
 	}
 	void saveDataToFile(string inFileName) {
 		std::ofstream outFile;          // поток для записи
-		ifstream iff(inFileName); //если файл есть удаляем
+		ifstream iff(inFileName, ios_base::binary); //если файл есть удаляем
 		if (iff.bad() == false)
 		{
 			iff.close();
@@ -124,15 +136,13 @@ public:
 			}
 
 		}
-		outFile.open(inFileName, std::ios::app); // окрываем файл для записи
-		// outFile.open(FileName, std::ios::app); // окрываем файл для записи
+		outFile.open(inFileName, ios_base::binary); // окрываем файл для записи
 		if (outFile.is_open())
 		{
 			StudentClass st = StudentClass();
 			int recordsCount = getRecordCount();
 			StudentNode* sn;
 			for (int i = 0; i < recordsCount; i++) {
-				//st.addRusakov();
 				outFile << startRecordString << std::endl;
 				sn = &DataBase.at(i);
 				st.UpdateMasString(sn);

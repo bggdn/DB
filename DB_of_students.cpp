@@ -30,7 +30,7 @@ int main()
     SetConsoleOutputCP(1251);
     std::cout << "B8B8BB88B88BBBB88B8BB...\n";
     StudentDBClass* sdb = new StudentDBClass();  
-    sdb->FileName = "DB.txt";
+    sdb->FileName = "DB.bin";
     sdb->loadDataFromFile();
 
     ClassMenu* mainMenu = new ClassMenu();
@@ -91,7 +91,6 @@ int main()
                         sn = &sdb->DataBase.at(i);
                         string tmpString = sn->surName + " " + sn->name + " " + sn->middleName + " " + sn->group;
                         delStudentsMenu->addItem(tmpString); //добавить в меню студентов
-                        //sn = sn->next;
                     }
                     while (resultDel != exitDel) {
                         delStudentsMenu->run();
